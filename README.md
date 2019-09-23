@@ -230,7 +230,7 @@ cd client
 npm start
 ```
 
-Open your browser and test the route http://localhost:3001/. The Home component should render but the outer links will not work yet because we haven't built them out yet.
+Open your browser and test the route http://localhost:3001/. The Home component should render but the other links will not work yet because we haven't built them out yet.
 
 Cool. We are done with shared components for now.
 
