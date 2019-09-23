@@ -134,21 +134,107 @@ A simple Home component:
 src/components/routes/Home.jsx
 ```js
 import React from 'react'
+import Layout from '../shared/Layout'
 
 const Home = () => (
-    <div>
-    <h1>Items App</h1>
-    <Nav />
+  <Layout>
     <h4>Welcome to the items app!</h4>
-  </div>
+  </Layout>
 )
 
 export default Home
 ```
 
-Next we will build the Items component. We will be making an axios call in the Items component to fetch all the Items from the server. 
+Notice the Layout component. We are going to build the Layout component next. This is a shared component that we will re-use multiple times. Essentially, the Layout component is the shell of the web app we are building.
 
-Let's start by installing [axios](https://www.npmjs.com/package/axios):
+Let's create our "shared" components. The idea of shared components is that anytime we have code that we would repeat in several components (a footer, a navbar, etc), we can wrap that code inside a component and import it in whenever needed.
+
+```sh
+cd client/src/components
+mkdir shared
+touch Layout.jsx Footer.jsx Nav.jsx
+```
+
+Let's start with the Layout component:
+
+components/shared/Layout.jsx
+```js
+import React from 'react'
+
+import Nav from './Nav'
+import Footer from './Footer'
+
+const Layout = props => (
+  <div>
+    <h1>Items App</h1>
+    <Nav />
+
+    {props.children}
+
+    <Footer />
+  </div>
+)
+
+export default Layout
+```
+
+> Note: We are using `props.children` here. [React Children](https://reactjs.org/docs/react-api.html#reactchildren) is a placeholder for which ever component calls the component that `props.children` is in. You will see this in action in a minute.
+
+Let's create our Nav component:
+
+components/shared/Nav.jsx
+```js
+import React from 'react'
+import { NavLink } from 'react-router-dom'
+
+const Nav = () => (
+  <nav>
+    <NavLink to='/'>Home</NavLink>
+    <NavLink to='/items'>Items</NavLink>
+    <NavLink to='/create-item'>Create Item</NavLink>
+  </nav>
+)
+
+export default Nav
+```
+
+And the Footer component:
+
+components/shared/Footer.jsx
+
+```js
+import React from 'react'
+
+const Footer = () => (
+  <p>© Copyright {new Date().getFullYear()}. All Rights Reserved.</p>
+)
+
+export default Footer
+```
+
+Let's make sure the app is working.
+
+```sh
+cd express-api-react
+npm start
+```
+
+Open a new tab in your terminal and run your client:
+
+```sh
+cd client
+npm start
+```
+
+Open your browser and test the route http://localhost:3001/. The Home component should render but the outer links will not work yet because we haven't built them out yet.
+
+Cool. We are done with shared components for now.
+
+Now let's build the Items component.
+
+We will be making an axios call in the Items component to fetch all the Items from the server. 
+
+Let's start by installing [axios](https://www.npmjs.com/package/axios). Make sure you're in the client folder.
 
 ```sh
 cd client
@@ -164,7 +250,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 
-class Movies extends Component {
+class Items extends Component {
   constructor (props) {
     super(props)
 
@@ -175,7 +261,7 @@ class Movies extends Component {
 
   async componentDidMount () {
     try {
-      const response = await axios(`http://localhost:3000/items`)
+      const response = await axios(`http://localhost:3000/api/items`)
       this.setState({ items: response.data.items })
     } catch (err) {
       console.error(err)
@@ -185,13 +271,13 @@ class Movies extends Component {
   render () {
     const items = this.state.items.map(item => (
       <li key={item.id}>
-        <Link to={`/movies/${item.id}`}>{item.title}</Link>
+        <Link to={`/items/${item.id}`}>{item.title}</Link>
       </li>
     ))
 
     return (
       <>
-        <h4>items</h4>
+        <h4>Items</h4>
         <ul>
           {items}
         </ul>
@@ -203,3 +289,193 @@ class Movies extends Component {
 export default Items
 ```
 
+Test the http://localhost:3001/items route in your browser.
+
+Good? Great. Let's move on to the Item component.
+
+components/routes/Item.jsx
+```js
+import React, { Component } from 'react'
+import { Link, Redirect } from 'react-router-dom'
+import axios from 'axios'
+
+import Layout from '../shared/Layout'
+
+class Item extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      item: null,
+      deleted: false
+    }
+  }
+
+  async componentDidMount() {
+    try {
+      const response = await axios(`http://localhost:3000/api/items/${this.props.match.params.id}`)
+      this.setState({ item: response.data.item })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  destroy = () => {
+    axios({
+      url: `http://localhost:3000/api/items/${this.props.match.params.id}`,
+      method: 'DELETE'
+    })
+      .then(() => this.setState({ deleted: true }))
+      .catch(console.error)
+  }
+
+  render() {
+    const { item, deleted } = this.state
+
+    if (!item) {
+      return <p>Loading...</p>
+    }
+
+    if (deleted) {
+      return <Redirect to={
+        { pathname: '/', state: { msg: 'Item succesfully deleted!' } }
+      } />
+    }
+
+    return (
+      <Layout>
+        <h4>{item.title}</h4>
+        <p>Link: {item.link}</p>
+        <button onClick={this.destroy}>Delete Item</button>
+        <Link to={`/items/${this.props.match.params.id}/edit`}>
+          <button>Edit</button>
+        </Link>
+        <Link to="/items">Back to all items</Link>
+      </Layout>
+    )
+  }
+}
+
+export default Item
+```
+
+We should now be able to see http://localhost:3001/items/1.
+
+Next, we want to implement the ItemEdit and ItemCreate. Inside the ItemEdit component we will have a form to edit an item. And Inside the ItemCreate component we will have form to create an item. What if we could abstract those two forms into one? We can, so let's do that now by creating another shared component called ItemForm:
+
+```sh
+cd components/shared/
+touch ItemForm.jsx
+```
+
+components/shared/ItemForm.jsx
+```js
+import React from 'react'
+import { Link } from 'react-router-dom'
+
+const ItemForm = ({ item, handleSubmit, handleChange, cancelPath }) => (
+  <form onSubmit={handleSubmit}>
+    <label>Title</label>
+    <input
+      placeholder="A vetted item."
+      value={item.title}
+      name="title"
+      onChange={handleChange}
+    />
+
+    <label>Link</label>
+    <input
+      placeholder="http://acoolitem.com"
+      value={item.link}
+      name="link"
+      onChange={handleChange}
+    />
+
+    <button type="submit">Submit</button>
+    <Link to={cancelPath}>
+      <button>Cancel</button>
+    </Link>
+  </form>
+)
+
+export default ItemForm
+```
+
+Awesome! Now let's build our ItemEdit component:
+
+components/routes/ItemEdit.jsx
+```js
+import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
+import axios from 'axios'
+
+import ItemForm from '../shared/ItemForm'
+import Layout from '../shared/Layout'
+
+class ItemEdit extends Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            item: {
+                title: '',
+                link: ''
+            },
+            updated: false
+        }
+    }
+
+    async componentDidMount() {
+        try {
+            const response = await axios(`http://localhost:3000/api/items/${this.props.match.params.id}`)
+            this.setState({ item: response.data.item })
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    handleChange = event => {
+        const updatedField = { [event.target.name]: event.target.value }
+
+        const editedItem = Object.assign(this.state.item, updatedField)
+
+        this.setState({ item: editedItem })
+    }
+
+    handleSubmit = event => {
+        event.preventDefault()
+
+        axios({
+            url: `http://localhost:3000/api/items/${this.props.match.params.id}`,
+            method: 'PATCH',
+            data: { item: this.state.item }
+        })
+            .then(() => this.setState({ updated: true }))
+            .catch(console.error)
+    }
+
+    render() {
+        const { item, updated } = this.state
+        const { handleChange, handleSubmit } = this
+
+        if (updated) {
+            return <Redirect to={`/items/${this.props.match.params.id}`} />
+        }
+
+        return (
+            <Layout>
+                <ItemForm
+                    item={item}
+                    handleChange={handleChange}
+                    handleSubmit={handleSubmit}
+                    cancelPath={`/items/${this.props.match.params.id}`}
+                />
+            </Layout>
+        )
+    }
+}
+
+export default ItemEdit
+```
+
+Let's test that.
