@@ -130,3 +130,76 @@ const App = props => (
 export default withRouter(App)
 ```
 
+A simple Home component:
+src/components/routes/Home.jsx
+```js
+import React from 'react'
+
+const Home = () => (
+    <div>
+    <h1>Items App</h1>
+    <Nav />
+    <h4>Welcome to the items app!</h4>
+  </div>
+)
+
+export default Home
+```
+
+Next we will build the Items component. We will be making an axios call in the Items component to fetch all the Items from the server. 
+
+Let's start by installing [axios](https://www.npmjs.com/package/axios):
+
+```sh
+cd client
+npm install axios
+```
+
+> When you run `npm install axios`, make sure you're inside the client folder where the package.json exists.
+
+Now we can build the Items component:
+
+```js
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import axios from 'axios'
+
+class Movies extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      items: []
+    }
+  }
+
+  async componentDidMount () {
+    try {
+      const response = await axios(`http://localhost:3000/items`)
+      this.setState({ items: response.data.items })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  render () {
+    const items = this.state.items.map(item => (
+      <li key={item.id}>
+        <Link to={`/movies/${item.id}`}>{item.title}</Link>
+      </li>
+    ))
+
+    return (
+      <>
+        <h4>items</h4>
+        <ul>
+          {items}
+        </ul>
+      </>
+    )
+  }
+}
+
+export default Items
+```
+
