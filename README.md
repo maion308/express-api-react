@@ -447,7 +447,7 @@ class ItemEdit extends Component {
 
         axios({
             url: `http://localhost:3000/api/items/${this.props.match.params.id}`,
-            method: 'PATCH',
+            method: 'PUT',
             data: { item: this.state.item }
         })
             .then(() => this.setState({ updated: true }))
@@ -478,4 +478,74 @@ class ItemEdit extends Component {
 export default ItemEdit
 ```
 
-Let's test that.
+Let's test that. Open http://localhost:3001/items/1 and edit a field.
+
+Nice! Now try delete. Bye.
+
+Ok. We have one last CRUD action to complete in our react app - CREATE. Let's build the ItemCreat component and use our ItemForm shared component:
+
+components/routes/ItemForm.jsx
+```js
+import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
+import axios from 'axios'
+
+import ItemForm from '../shared/ItemForm'
+import Layout from '../shared/Layout'
+
+class ItemCreate extends Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            item: {
+                title: '',
+                link: ''
+            },
+            createdItemId: null
+        }
+    }
+
+    handleChange = event => {
+        const updatedField = { [event.target.name]: event.target.value }
+
+        const editedItem = Object.assign(this.state.item, updatedField)
+
+        this.setState({ item: editedItem })
+    }
+
+    handleSubmit = event => {
+        event.preventDefault()
+
+        axios({
+            url: `http://localhost:3000/api/items`,
+            method: 'POST',
+            data: { item: this.state.item }
+        })
+            .then(res => this.setState({ createdItemId: res.data.item.id }))
+            .catch(console.error)
+    }
+
+    render() {
+        const { handleChange, handleSubmit } = this
+        const { createdItemId, item } = this.state
+
+        if (createdItemId) {
+            return <Redirect to={`/items/${createdItemId}`} />
+        }
+
+        return (
+            <Layout>
+                <ItemForm
+                    item={item}
+                    handleChange={handleChange}
+                    handleSubmit={handleSubmit}
+                    cancelPath="/"
+                />
+            </Layout>
+        )
+    }
+}
+
+export default ItemCreate
+```
