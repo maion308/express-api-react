@@ -490,6 +490,7 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import axios from 'axios'
 
+import apiUrl from '../../apiConfig'
 import ItemForm from '../shared/ItemForm'
 import Layout from '../shared/Layout'
 
@@ -502,7 +503,7 @@ class ItemCreate extends Component {
                 title: '',
                 link: ''
             },
-            createdItemId: null
+            createdItem: null
         }
     }
 
@@ -518,20 +519,20 @@ class ItemCreate extends Component {
         event.preventDefault()
 
         axios({
-            url: `http://localhost:3000/api/items`,
+            url: `${apiUrl}/items`,
             method: 'POST',
             data: { item: this.state.item }
         })
-            .then(res => this.setState({ createdItemId: res.data.item.id }))
+            .then(res => this.setState({ createdItem: res.data.item }))
             .catch(console.error)
     }
 
     render() {
         const { handleChange, handleSubmit } = this
-        const { createdItemId, item } = this.state
+        const { createdItem, item } = this.state
 
-        if (createdItemId) {
-            return <Redirect to={`/items/${createdItemId}`} />
+        if (createdItem) {
+            return <Redirect to={`/items`} />
         }
 
         return (
@@ -549,3 +550,41 @@ class ItemCreate extends Component {
 
 export default ItemCreate
 ```
+
+Great, test the create in your browser.
+
+We now have full CRUD complete on the backend and on the frontend.
+
+Success.
+
+### Bonus: Refactoring
+
+Notice how we using the api url in multiple components. What would happen if we need to update the url, we would have to change it in several places. What if we could store the api url in one place and have it accessed from there? That way if we want to change the api url, we only change it in one place. We can do this!
+
+Let's create an apiConfig component:
+
+src/
+```sh
+touch apiConfig.jsx
+```
+
+src/apiConfig.jsx
+```js
+let apiUrl
+const apiUrls = {
+  production: 'https://sei-items-api.herokuapp.com/api',
+  development: 'http://localhost:3000/api'
+}
+
+if (window.location.hostname === 'localhost') {
+  apiUrl = apiUrls.development
+} else {
+  apiUrl = apiUrls.production
+}
+
+export default apiUrl
+```
+
+Now replace all instances of http://localhost:3000/api in you Items, Item, ItemCreate, and ItemEdit components with `${apiUrl}` and don't forget to import the apiConfig component: `import apiUrl from '../../apiConfig'`
+
+Good Job!
