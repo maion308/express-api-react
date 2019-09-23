@@ -2,10 +2,12 @@ const { Item } = require('../models');
 
 const createItem = async (req, res) => {
     try {
-        const item = await Item.create(req.body);
-        return res.status(201).json({
-            item,
-        });
+        console.log("req.body:", req.body)
+        const { item } = req.body
+        const createdItem = await Item.create(item);
+        return res.status(201).json({item: {
+            createdItem,
+        }});
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
