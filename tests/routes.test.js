@@ -25,11 +25,11 @@ describe('Items API', () => {
     it('should update an item', async () => {
         const res = await request(app)
             .put('/api/items/1')
-            .send({
+            .send({ item: {
                 title: 'Update Test Item',
                 link: 'http://www.testing.com',
                 userId: '1'
-            })
+            }})
         expect(res.statusCode).toEqual(200)
         expect(res.body).toHaveProperty('item')
     }),
