@@ -1,51 +1,15 @@
 const request = require('supertest')
 const app = require('../app.js')
-describe('User API', () => {
-    it('should show all users', async () => {
-        const res = await request(app).get('/api/users')
+describe('Items API', () => {
+    it('should show all items', async () => {
+        const res = await request(app).get('/api/items')
         expect(res.statusCode).toEqual(200)
-        expect(res.body).toHaveProperty('users')
+        expect(res.body).toHaveProperty('items')
     }),
-    it('should show a user', async () => {
-        const res = await request(app).get('/api/users/3')
+    it('should show an item', async () => {
+        const res = await request(app).get('/api/items/3')
         expect(res.statusCode).toEqual(200)
-        expect(res.body).toHaveProperty('user')
-    }),
-    it('should create a new user', async () => {
-        const res = await request(app)
-            .post('/api/users')
-            .send({
-                firstName: 'Bob',
-                lastName: 'Doe',
-                email: 'bob@doe.com',
-                password: '12345678'
-            })
-        expect(res.statusCode).toEqual(201)
-        expect(res.body).toHaveProperty('user')
-    }),
-    it('should update a user', async () => {
-        const res = await request(app)
-            .put('/api/users/3')
-            .send({
-                firstName: 'Bob',
-                lastName: 'Smith',
-                email: 'bob@doe.com',
-                password: 'abc123'
-            })
-        expect(res.statusCode).toEqual(200)
-        expect(res.body).toHaveProperty('user')
-    }),
-    it('should delete a user', async () => {
-        const res = await request(app)
-            .del('/api/users/3')
-            .send({
-                firstName: 'Bob',
-                lastName: 'Smith',
-                email: 'bob@doe.com',
-                password: 'abc123'
-            })
-        expect(res.statusCode).toEqual(200)
-        expect(res.text).toEqual("User deleted")
+        expect(res.body).toHaveProperty('item')
     }),
     it('should create a new item', async () => {
         const res = await request(app)
@@ -56,11 +20,6 @@ describe('User API', () => {
                 userId: '1'
             })
         expect(res.statusCode).toEqual(201)
-        expect(res.body).toHaveProperty('item')
-    }),
-    it('should show an item', async () => {
-        const res = await request(app).get('/api/items/1')
-        expect(res.statusCode).toEqual(200)
         expect(res.body).toHaveProperty('item')
     }),
     it('should update an item', async () => {

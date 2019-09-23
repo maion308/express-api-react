@@ -16,9 +16,9 @@ Create a .env file with the database credentials:
 
 ```sh
 cat - <<EOF >> .env
-DEV_DATABASE=wishlist_app_development
+DEV_DATABASE=items_app_development
 DEV_HOST=127.0.0.1
-TEST_DATABASE=wishlist_app_test
+TEST_DATABASE=items_app_test
 TEST_HOST=127.0.0.1
 EOF
 ```
@@ -34,8 +34,8 @@ npx sequelize-cli db:seed:all
 Make sure the data exists:
 
 ```sh
-psql wishlist_app_development
-SELECT * FROM "Users" JOIN "Items" ON "Users".id = "Items"."userId";
+psql items_app_development
+SELECT * FROM "Items";
 ```
 
 Make sure the tests pass:
@@ -53,9 +53,8 @@ npm start
 
 Test the following routes in your browser:
 
-- http://localhost:3000/api/users
-- http://localhost:3000/api/users/3
-- http://localhost:3000/api/items/1
+- http://localhost:3000/api/items
+- http://localhost:3000/api/items/3
 
 Now open a new tab in the terminal. Make sure you're inside the repo.
 
