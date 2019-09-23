@@ -14,11 +14,10 @@ describe('Items API', () => {
     it('should create a new item', async () => {
         const res = await request(app)
             .post('/api/items')
-            .send({
+            .send({ item: {
                 title: 'Test Item',
-                link: 'http://www.testing.com',
-                userId: '1'
-            })
+                link: 'http://www.testing.com'
+            }})
         expect(res.statusCode).toEqual(201)
         expect(res.body).toHaveProperty('item')
     }),
@@ -27,8 +26,7 @@ describe('Items API', () => {
             .put('/api/items/1')
             .send({ item: {
                 title: 'Update Test Item',
-                link: 'http://www.testing.com',
-                userId: '1'
+                link: 'http://www.testing.com'
             }})
         expect(res.statusCode).toEqual(200)
         expect(res.body).toHaveProperty('item')
@@ -38,8 +36,7 @@ describe('Items API', () => {
             .del('/api/items/1')
             .send({
                 title: 'Update Test Item',
-                link: 'http://www.testing.com',
-                userId: '1'
+                link: 'http://www.testing.com'
             })
         expect(res.statusCode).toEqual(200)
         expect(res.text).toEqual("Item deleted")
