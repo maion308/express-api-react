@@ -88,9 +88,13 @@ ReactDOM.render(
 Cool. Now let's setup our routes.  A route will render an associated component. Below is the list:
 
 `/` - the homepage, just display a welcome screen. It will render a Home component.
+
 `/items` - the ability to see all items. It will render an Items component.
+
 `/create-item` - the ability to create a new item. It will render an ItemCreate component.
+
 `/items/:id` - the ability to see a specific item. It will render an Item component.
+
 `/items/:id/edit` - the ability to edit an item. It will render an ItemEdit component.
 
 Let's start by creating our empty components:
