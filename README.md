@@ -35,8 +35,6 @@ config/config.json
 }
 ```
 
-> Note: We could have created that file using VS Code, but instead we used a quick bash shortcut.
-
 ```sh
 npx sequelize-cli db:create
 npx sequelize-cli db:migrate
