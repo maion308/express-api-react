@@ -1,0 +1,17 @@
+{
+  "development": {
+    "database": "items_app_development",
+    "dialect": "postgres"
+  },
+  "test": {
+    "database": "items_app_test",
+    "dialect": "postgres"
+  },
+  "production": {
+    "use_env_variable": "DATABASE_URL",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": true
+    }
+  }
+}
