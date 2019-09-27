@@ -12,15 +12,27 @@ cd express-api-react
 npm install
 ```
 
-Create a .env file with the database credentials:
+Setup the database config:
 
+config/config.json
 ```sh
-cat - <<EOF >> .env
-DEV_DATABASE=items_app_development
-DEV_HOST=127.0.0.1
-TEST_DATABASE=items_app_test
-TEST_HOST=127.0.0.1
-EOF
+{
+  "development": {
+    "database": "items_app_development",
+    "dialect": "postgres"
+  },
+  "test": {
+    "database": "items_app_test",
+    "dialect": "postgres"
+  },
+  "production": {
+    "use_env_variable": "DATABASE_URL",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": true
+    }
+  }
+}
 ```
 
 > Note: We could have created that file using VS Code, but instead we used a quick bash shortcut.
