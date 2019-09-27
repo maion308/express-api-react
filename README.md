@@ -601,4 +601,45 @@ export default apiUrl
 
 Now replace all instances of http://localhost:3000/api in you Items, Item, ItemCreate, and ItemEdit components with `${apiUrl}` and don't forget to import the apiConfig component: `import apiUrl from '../../apiConfig'`
 
-Good Job!
+## Deploying to Heroku and [Surge](https://surge.sh)
+
+1. `heroku create your-heroku-app-name`
+2. `heroku buildpacks:set heroku/nodejs`
+3. `heroku addons:create heroku-postgresql:hobby-dev --app=your-heroku-app-name`
+4. `git add .`
+5. `git commit -m "add any pending changes"`
+6. `git push heroku master`
+7. `heroku run npx sequelize-cli db:migrate`
+8. `heroku run npx sequelize-cli db:seed:all`
+
+> Having issues? Debug with the Heroku command `heroku logs --tail` to see what's happening on the Heroku server.
+
+Test the endpoints :)
+
+> https://your-heroku-app-name.herokuapp.com/api/users
+
+> https://your-heroku-app-name.herokuapp.com/api/users/1
+
+Cool the backend is now deployed! On to the frontend:
+
+First you will have to replace anywhere inside your react app where you made an axios call to localhost:3000 to https://your-heroku-app-name.herokuapp.com - if you completed the bonus that means you will only have to update the apiConfig.js file with https://your-heroku-app-name.herokuapp.com as the value for the production key.
+
+Now let's deploy the frontend:
+
+```sh
+cd client
+npm run build
+cd build
+mv index.html 200.html
+npx surge
+```
+
+> Follow the prompts on Surge. Test the frontend routes once deployed. Getting errors? Check the browser dev tools. Check `heroku logs --tail`
+
+Congrats! You built a full crud app with a backend and a frontend. You are now a fullstack developer!
+
+> ✊ **Fist to Five**
+
+## Feedback
+
+> [Take a minute to give us feedback on this lesson so we can improve it!](https://forms.gle/vgUoXbzxPWf4oPCX6)
