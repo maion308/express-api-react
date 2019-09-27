@@ -7,6 +7,12 @@
 
 # Express API - React CRUD
 
+![](StackArchitecture.png)
+
+We've built the backend. Now it's time to build the frontend.
+
+In this project we are going to be using react to build a CRUD frontend to our items json api.
+
 ```sh
 cd express-api-react
 npm install
