@@ -612,8 +612,8 @@ Now replace all instances of http://localhost:3000/api in you Items, Item, ItemC
 1. `heroku create your-heroku-app-name`
 2. `heroku buildpacks:set heroku/nodejs`
 3. `heroku addons:create heroku-postgresql:hobby-dev --app=your-heroku-app-name`
-4. `git add .`
-5. `git commit -m "add any pending changes"`
+4. `git status`
+5. `git commit -am "add any pending changes"`
 6. `git push heroku master`
 7. `heroku run npx sequelize-cli db:migrate`
 8. `heroku run npx sequelize-cli db:seed:all`
