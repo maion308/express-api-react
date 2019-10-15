@@ -4,9 +4,6 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest --testTimeout=10000",
-    "pretest": "cross-env NODE_ENV=test npm run db:reset",
-    "db:create:test": "cross-env NODE_ENV=test npx sequelize-cli db:create",
     "start": "nodemon server.js",
     "db:reset": "npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all"
   },
@@ -26,16 +23,7 @@
     "sequelize": "^5.18.4"
   },
   "devDependencies": {
-    "cross-env": "^5.2.1",
-    "jest": "^24.9.0",
     "nodemon": "^1.19.2",
-    "sequelize-cli": "^5.5.1",
-    "supertest": "^4.0.2"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "coveragePathIgnorePatterns": [
-      "/node_modules/"
-    ]
+    "sequelize-cli": "^5.5.1"
   }
 }
