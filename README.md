@@ -126,7 +126,7 @@ import ItemEdit from './components/routes/ItemEdit'
 import ItemCreate from './components/routes/ItemCreate'
 import Home from './components/routes/Home'
 
-const App = props => (
+const App = () => (
   <React.Fragment>
     <Route exact path='/' component={Home} />
     <Route exact path='/items' component={Items} />
@@ -323,7 +323,7 @@ class Item extends Component {
 
   async componentDidMount() {
     try {
-      const response = await axios(`http://localhost:3000/api/items/${this.props.match.params.id}`)
+      const response = await axios(`http://localhost:3001/api/items/${this.props.match.params.id}`)
       this.setState({ item: response.data.item })
     } catch (err) {
       console.error(err)
@@ -332,7 +332,7 @@ class Item extends Component {
 
   destroy = () => {
     axios({
-      url: `http://localhost:3000/api/items/${this.props.match.params.id}`,
+      url: `http://localhost:3001/api/items/${this.props.match.params.id}`,
       method: 'DELETE'
     })
       .then(() => this.setState({ deleted: true }))
@@ -437,7 +437,7 @@ class ItemEdit extends Component {
 
     async componentDidMount() {
         try {
-            const response = await axios(`http://localhost:3000/api/items/${this.props.match.params.id}`)
+            const response = await axios(`http://localhost:3001/api/items/${this.props.match.params.id}`)
             this.setState({ item: response.data.item })
         } catch (err) {
             console.error(err)
@@ -456,7 +456,7 @@ class ItemEdit extends Component {
         event.preventDefault()
 
         axios({
-            url: `http://localhost:3000/api/items/${this.props.match.params.id}`,
+            url: `http://localhost:3001/api/items/${this.props.match.params.id}`,
             method: 'PUT',
             data: { item: this.state.item }
         })
@@ -583,7 +583,7 @@ src/apiConfig.jsx
 let apiUrl
 const apiUrls = {
   production: 'https://sei-items-api.herokuapp.com/api',
-  development: 'http://localhost:3000/api'
+  development: 'http://localhost:3001/api'
 }
 
 if (window.location.hostname === 'localhost') {
