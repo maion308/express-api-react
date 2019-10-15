@@ -118,7 +118,7 @@ Now let's create our routes:
 client/App.js
 ```js
 import React from 'react'
-import { Route, withRouter } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 
 import Items from './components/routes/Items'
 import Item from './components/routes/Item'
@@ -136,7 +136,7 @@ const App = props => (
   </React.Fragment>
 )
 
-export default withRouter(App)
+export default App
 ```
 
 A simple Home component:
