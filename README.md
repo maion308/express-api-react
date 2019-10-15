@@ -18,7 +18,7 @@ cd express-api-react
 npm install
 ```
 
-Setup the database config:
+Checkout the database config:
 
 config/config.json
 ```sh
@@ -42,9 +42,7 @@ config/config.json
 ```
 
 ```sh
-npx sequelize-cli db:create
-npx sequelize-cli db:migrate
-npx sequelize-cli db:seed:all
+npm run db:reset
 ```
 
 Make sure the data exists:
@@ -52,13 +50,6 @@ Make sure the data exists:
 ```sh
 psql items_app_development
 SELECT * FROM "Items";
-```
-
-Make sure the tests pass:
-
-```sh
-npx sequelize-cli db:create --env test
-npm test
 ```
 
 Run the server:
@@ -77,7 +68,6 @@ Now open a new tab in the terminal. Make sure you're inside the repo.
 Let's create our React app.
 
 ```sh
-cd express-api-react
 npx create-react-app client
 ```
 
@@ -91,8 +81,10 @@ npm install react-router-dom
 
 And now let's setup our app to use react router:
 
-client/index.js
+client/src/index.js
 ```js
+import { BrowserRouter as Router } from "react-router-dom";
+
 ReactDOM.render(
   <Router>
     <App />
@@ -113,13 +105,13 @@ Cool. Now let's setup our routes.  A route will render an associated component. 
 
 `/items/:id/edit` - the ability to edit an item. It will render an ItemEdit component.
 
-Let's start by creating our empty components:
+Let's start by creating our empty components in client/src directory:
 
 ```sh
-cd src
 mkdir components
 cd components
 mkdir routes
+cd routes
 touch Home.jsx Item.jsx ItemCreate.jsx ItemEdit.jsx Items.jsx
 ```
 
@@ -172,6 +164,7 @@ Let's create our "shared" components. The idea of shared components is that anyt
 ```sh
 cd client/src/components
 mkdir shared
+cd shared
 touch Layout.jsx Footer.jsx Nav.jsx
 ```
 
@@ -281,7 +274,7 @@ class Items extends Component {
 
   async componentDidMount () {
     try {
-      const response = await axios(`http://localhost:3000/api/items`)
+      const response = await axios(`http://localhost:3001/api/items`)
       this.setState({ items: response.data.items })
     } catch (err) {
       console.error(err)
@@ -309,7 +302,7 @@ class Items extends Component {
 export default Items
 ```
 
-Test the http://localhost:3001/items route in your browser.
+Test the http://localhost:3001/api/items route in your browser.
 
 Good? Great. Let's move on to the Item component.
 
