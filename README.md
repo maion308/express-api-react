@@ -58,8 +58,8 @@ npm start
 
 Test the following routes in your browser:
 
-- http://localhost:3000/api/items
-- http://localhost:3000/api/items/3
+- http://localhost:3001/api/items
+- http://localhost:3001/api/items/3
 
 Now open a new tab in the terminal. Make sure you're inside the repo.
 
