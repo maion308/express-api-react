@@ -41,9 +41,9 @@ config/config.json
 }
 ```
 
-```sh
+Now run ```sh
 npm run db:reset
-```
+``` to set up your database.
 
 Make sure the data exists:
 
