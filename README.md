@@ -128,7 +128,6 @@ import Home from './components/routes/Home'
 
 const App = props => (
   <React.Fragment>
-    <h3>{props.location.state ? props.location.state.msg : null}</h3>
     <Route exact path='/' component={Home} />
     <Route exact path='/items' component={Items} />
     <Route exact path='/create-item' component={ItemCreate} />
